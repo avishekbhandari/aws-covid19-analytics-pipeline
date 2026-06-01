@@ -1,0 +1,49 @@
+{
+	"jobConfig": {
+		"name": "covid-silver-to-gold",
+		"description": "",
+		"role": "arn:aws:iam::910972977883:role/AWSGlueServiceRole-CovidAnalytics",
+		"command": "glueetl",
+		"version": "5.1",
+		"runtime": null,
+		"workerType": "G.1X",
+		"numberOfWorkers": 10,
+		"maxCapacity": 10,
+		"jobRunQueuingEnabled": false,
+		"maxRetries": 0,
+		"timeout": 480,
+		"maxConcurrentRuns": 1,
+		"security": "none",
+		"scriptName": "covid-silver-to-gold.py",
+		"scriptLocation": "s3://aws-glue-assets-910972977883-us-east-1/scripts/",
+		"language": "python-3",
+		"spark": true,
+		"sparkConfiguration": "standard",
+		"jobParameters": [
+			{
+				"key": "--conf",
+				"value": "spark.eventLog.rolling.enabled=true --conf spark.sql.catalog.glue_catalog.glue.skip-name-validation=true",
+				"existing": false
+			}
+		],
+		"tags": [],
+		"jobMode": "DEVELOPER_MODE",
+		"createdOn": "2026-05-29T15:18:18.554Z",
+		"developerMode": true,
+		"connectionsList": [],
+		"temporaryDirectory": "s3://aws-glue-assets-910972977883-us-east-1/temporary/",
+		"logging": true,
+		"glueHiveMetastore": true,
+		"etlAutoTuning": true,
+		"metrics": true,
+		"observabilityMetrics": true,
+		"bookmark": "job-bookmark-disable",
+		"sparkPath": "s3://aws-glue-assets-910972977883-us-east-1/sparkHistoryLogs/",
+		"flexExecution": false,
+		"minFlexWorkers": null,
+		"maintenanceWindow": null
+	},
+	"hasBeenSaved": false,
+	"usageProfileName": null,
+	"script": "# ---- GOLD BUILD (PySpark) ----\r\nfrom pyspark.sql import SparkSession, functions as F\r\nfrom pyspark.sql import Window as W\r\n\r\n\r\nBUCKET = \"covid-19-analytics-avishek\"\r\nSILVER = f\"s3://{BUCKET}/covid/silver\"\r\nGOLD = f\"s3://{BUCKET}/covid/gold\"\r\n\r\nspark = SparkSession.builder.appName(\"covid-minimal-gold\").getOrCreate()\r\n\r\ncases = spark.read.parquet(f\"{SILVER}/cases_standardized\")\r\ntests = spark.read.parquet(f\"{SILVER}/testing_standardized\")\r\n\r\n# dim_date\r\nall_dates = (cases.select(\"full_date\").union(tests.select(\"full_date\")).dropDuplicates())\r\ndim_date = (all_dates\r\n  .withColumn(\"date_id\", F.date_format(\"full_date\", \"yyyyMMdd\").cast(\"int\"))\r\n  .withColumn(\"year\", F.year(\"full_date\"))\r\n  .withColumn(\"month\", F.month(\"full_date\"))\r\n  .withColumn(\"day\", F.dayofmonth(\"full_date\"))\r\n  .withColumn(\"dow\", F.dayofweek(\"full_date\"))\r\n  .withColumn(\"is_weekend\", F.col(\"dow\").isin([1,7]))\r\n)\r\ndim_date.write.mode(\"overwrite\").parquet(f\"{GOLD}/dim_date\")\r\n\r\n# dim_state\r\ndim_state = cases.select(\"state_code\", \"state_name\").dropDuplicates()\r\ndim_state.write.mode(\"overwrite\").parquet(f\"{GOLD}/dim_state\")\r\n\r\n# fact_cases_state_daily\r\nw = W.partitionBy(\"state_code\").orderBy(\"full_date\")\r\nfact_cases = (cases\r\n  .withColumn(\"date_id\", F.date_format(\"full_date\", \"yyyyMMdd\").cast(\"int\"))\r\n  .withColumn(\"new_cases\",  F.greatest(F.col(\"cases_cum\")  - F.lag(\"cases_cum\").over(w),  F.lit(0)))\r\n  .withColumn(\"new_deaths\", F.greatest(F.col(\"deaths_cum\") - F.lag(\"deaths_cum\").over(w), F.lit(0)))\r\n  .select(\"date_id\", \"state_code\", \"cases_cum\", \"deaths_cum\", \"new_cases\", \"new_deaths\")\r\n)\r\nfact_cases.write.mode(\"overwrite\").partitionBy(\"state_code\").parquet(f\"{GOLD}/fact_cases_state_daily\")\r\n\r\n# fact_testing_state_daily\r\nw2 = W.partitionBy(\"state_code\").orderBy(\"full_date\")\r\nfact_tests = (tests\r\n  .withColumn(\"date_id\", F.date_format(\"full_date\", \"yyyyMMdd\").cast(\"int\"))\r\n  .withColumn(\"new_tests\", F.greatest(F.col(\"tests_total_cum\") - F.lag(\"tests_total_cum\").over(w2), F.lit(0)))\r\n  .withColumn(\"positivity_rate\", F.when(F.col(\"tests_total_cum\") > 0,\r\n                                       (F.col(\"tests_pos_cum\") / F.col(\"tests_total_cum\")).cast(\"double\")))\r\n  .select(\"date_id\", \"state_code\", \"tests_total_cum\", \"tests_pos_cum\", \"tests_neg_cum\", \"new_tests\", \"positivity_rate\")\r\n)\r\nfact_tests.write.mode(\"overwrite\").partitionBy(\"state_code\").parquet(f\"{GOLD}/fact_testing_state_daily\")\r\n\r\nprint(\"Gold complete.\")\r\n\r\n"
+}
