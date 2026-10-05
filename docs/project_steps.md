@@ -167,11 +167,10 @@ The Bronze layer keeps the original files unchanged. This is useful because the 
 
 ### Screenshot references
 
-```markdown
-![COVID Tracking File Uploaded](../screenshots/03_bronze_covid_tracking_file.png)
-![NYTimes File Uploaded](../screenshots/04_bronze_nytimes_file.png)
-![Static State Lookup File Uploaded](../screenshots/05_bronze_static_file.png)
-```
+[COVID Tracking File Uploaded](../screenshots/03_bronze_covid_tracking_file.png)
+[NYTimes File Uploaded](../screenshots/04_bronze_nytimes_file.png)
+[Static State Lookup File Uploaded](../screenshots/05_bronze_static_file.png)
+
 
 ---
 
@@ -318,11 +317,10 @@ This confirmed that the first Glue job successfully created cleaned Parquet outp
 
 ### Screenshot references
 
-```markdown
-![S3 Silver Layer Folders](../screenshots/06_s3_silver_layer_folders.png)
-![Silver Cases Partition Output](../screenshots/10_silver_cases_partition_output.png)
-![Silver Testing Partition Output](../screenshots/11_silver_testing_partition_output.png)
-```
+[S3 Silver Layer Folders](../screenshots/06_s3_silver_layer_folders.png)
+[Silver Cases Partition Output](../screenshots/10_silver_cases_partition_output.png)
+[Silver Testing Partition Output](../screenshots/11_silver_testing_partition_output.png)
+
 
 ---
 
@@ -384,10 +382,9 @@ Athena needs external table definitions to query Parquet files in S3. Since the 
 
 ### Screenshot references
 
-```markdown
-![Athena Create Silver Tables](../screenshots/12_athena_create_silver_tables.png)
-![Glue Catalog Silver Tables](../screenshots/13_glue_catalog_silver_tables.png)
-```
+[Athena Create Silver Tables](../screenshots/12_athena_create_silver_tables.png)
+[Glue Catalog Silver Tables](../screenshots/13_glue_catalog_silver_tables.png)
+
 
 ---
 
@@ -556,13 +553,11 @@ This confirmed that the second Glue job successfully created analytics-ready Par
 
 ### Screenshot references
 
-```markdown
-![S3 Gold Layer Folders](../screenshots/07_s3_gold_layer_folders.png)
-![Gold Dim Date Output](../screenshots/15_gold_dim_date_output.png)
-![Gold Dim State Output](../screenshots/16_gold_dim_state_output.png)
-![Gold Fact Cases Partitions](../screenshots/17_gold_fact_cases_partitions.png)
-![Gold Fact Testing Partitions](../screenshots/18_gold_fact_testing_partitions.png)
-```
+[S3 Gold Layer Folders](../screenshots/07_s3_gold_layer_folders.png)
+[Gold Dim Date Output](../screenshots/15_gold_dim_date_output.png)
+[Gold Dim State Output](../screenshots/16_gold_dim_state_output.png)
+[Gold Fact Cases Partitions](../screenshots/17_gold_fact_cases_partitions.png)
+[Gold Fact Testing Partitions](../screenshots/18_gold_fact_testing_partitions.png)
 
 ---
 
@@ -600,10 +595,8 @@ Athena can show `state_code` as a column because it reads partition metadata fro
 
 ### Screenshot references
 
-```markdown
-![Athena Create Gold Tables](../screenshots/19_athena_create_gold_tables.png)
-![Glue Catalog Gold Tables](../screenshots/20_glue_catalog_gold_tables.png)
-```
+[Athena Create Gold Tables](../screenshots/19_athena_create_gold_tables.png)
+[Glue Catalog Gold Tables](../screenshots/20_glue_catalog_gold_tables.png)
 
 ---
 
@@ -937,14 +930,14 @@ aws-covid19-analytics-pipeline/
 │   └── ...
 │
 ├── scripts/
-│   ├── bronze_to_silver.py
-│   └── silver_to_gold.py
+│   ├── covid-bronze-to-silver.json
+│   └── covid-silver-to-gold.json
 │
 ├── sql/
-│   ├── athena_silver_tables.sql
-│   ├── athena_gold_tables.sql
-│   ├── redshift_schema_copy.sql
-│   └── athena_bi_queries.sql
+│   ├── athena_bi_analytics_queries.sql
+│   ├── athena_create_gold_tables.sql
+│   ├── athena_create_silver_tables.sql
+│   └── redshift_create_and_copy.sql
 │
 ├── README.md
 └── .gitignore
@@ -972,7 +965,7 @@ aws-covid19-analytics-pipeline/
 | Redshift schema and COPY load validation | Completed |
 | Redshift schema/partition issue debugging | Completed |
 | Athena BI analytics queries | Completed |
-| GitHub documentation cleanup | In progress |
+| GitHub documentation cleanup | Completed |
 
 ---
 
