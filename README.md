@@ -318,7 +318,6 @@ aws-covid19-analytics-pipeline/
 │   └── redshift_create_and_copy.sql
 │
 ├── README.md
-├── requirements.txt
 └── .gitignore
 ```
 
@@ -366,3 +365,22 @@ This file explains how the project was built, what each AWS service was used for
 - Clear documentation and screenshots make cloud projects easier to explain.
 
 ---
+
+## Limitations
+
+This project was built as a learning and portfolio project. A production version could improve it by adding:
+
+- automated orchestration
+- stronger data quality checks
+- CloudWatch logging and alerting
+- Infrastructure as Code
+- CI/CD deployment
+- dashboarding with QuickSight or Power BI
+
+---
+
+## Status
+
+Completed as a portfolio AWS data engineering project.
+
+The project includes source datasets, AWS Glue ETL job exports, Athena SQL, Redshift SQL, screenshots, and step-by-step documentation.
