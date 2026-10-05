@@ -105,9 +105,7 @@ This structure helped keep the raw, cleaned, and final analytics datasets separa
 
 ### Screenshot reference
 
-```markdown
 ![S3 COVID Root Folders](../screenshots/01_s3_covid_root_folders.png)
-```
 
 ---
 
@@ -141,9 +139,7 @@ The raw datasets came from different sources. Keeping them in separate folders m
 
 ### Screenshot reference
 
-```markdown
 ![S3 Bronze Folders](../screenshots/02_s3_bronze_folders.png)
-```
 
 ---
 
@@ -209,9 +205,7 @@ AWS Glue runs as an AWS service. Without an IAM role, the Glue job would not be 
 
 ### Screenshot reference
 
-```markdown
 ![Glue IAM Role](../screenshots/08_glue_iam_role.png)
-```
 
 ---
 
@@ -297,9 +291,7 @@ Better for Athena scan cost compared to CSV
 
 ### Screenshot reference
 
-```markdown
 ![Glue Bronze to Silver Script](../screenshots/09_glue_bronze_to_silver_script.png)
-```
 
 ---
 
@@ -537,9 +529,7 @@ The Silver layer was cleaned data. The Gold layer made it easier to run analytic
 
 ### Screenshot reference
 
-```markdown
 ![Glue Silver to Gold Script](../screenshots/14_glue_silver_to_gold_script.png)
-```
 
 ---
 
@@ -670,9 +660,7 @@ Redshift Serverless was used as a warehouse/serving layer to validate loading Go
 
 ### Screenshot reference
 
-```markdown
 ![Redshift Serverless Namespace](../screenshots/21_redshift_serverless_namespace.png)
-```
 
 ---
 
@@ -705,9 +693,7 @@ Before publishing screenshots publicly, crop or hide AWS account IDs and any sen
 
 ### Screenshot reference
 
-```markdown
 ![Redshift IAM Role](../screenshots/22_redshift_iam_role.png)
-```
 
 ---
 
@@ -751,9 +737,7 @@ The S3 bucket was in `us-east-1`, so the Redshift COPY command needed the region
 
 ### Screenshot reference
 
-```markdown
 ![Redshift Schema and COPY Editor](../screenshots/23_redshift_schema_copy_editor.png)
-```
 
 ---
 
@@ -874,9 +858,7 @@ Result:
 
 Screenshot:
 
-```markdown
 ![Athena Top New Cases](../screenshots/24_athena_top_new_cases.png)
-```
 
 ---
 
@@ -895,9 +877,7 @@ ORDER BY d.full_date;
 
 Screenshot:
 
-```markdown
 ![Athena Positivity Trend NY](../screenshots/25_athena_positivity_trend_ny.png)
-```
 
 ---
 
@@ -921,9 +901,7 @@ ORDER BY d.full_date;
 
 Screenshot:
 
-```markdown
 ![Athena Daily Cases vs Tests CA](../screenshots/26_athena_daily_cases_vs_tests_ca.png)
-```
 
 ---
 
@@ -969,13 +947,8 @@ aws-covid19-analytics-pipeline/
 │   └── athena_bi_queries.sql
 │
 ├── README.md
-├── requirements.txt
 └── .gitignore
 ```
-
-### Note
-
-Some documentation, SQL files, and script files can be added separately to make the GitHub repository easier to review.
 
 ---
 
